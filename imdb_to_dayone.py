@@ -17,7 +17,7 @@ def store(row):
 
     tags = ["--tags", "Movies", rating]
     if row["first_viewing"]:
-        tags.append("first_viewing")
+        tags.append("first-watch")
 
     args.extend(tags)
     args.extend(["--", "new"])
