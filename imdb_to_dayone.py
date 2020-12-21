@@ -3,6 +3,7 @@
 import json
 import logging
 import urllib.request
+import shutil
 import subprocess
 
 
@@ -20,6 +21,12 @@ def store(row):
         tags.append("first-watch")
 
     args.extend(tags)
+
+    if _path := shutil.which("corelocationcli"):
+        res = subprocess.run(args=[_path], capture_output=True)
+        coord = str(res.stdout, "utf8")
+        args.extend(["--coordinate"] + list(coord.strip().split()))
+
     args.extend(["--", "new"])
 
     logger.debug("STDOUT: %s\nargs: %s", entry, " ".join(args))
