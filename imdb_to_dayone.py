@@ -2,6 +2,7 @@
 
 import json
 import logging
+import urllib.parse
 import urllib.request
 import shutil
 import subprocess
@@ -55,7 +56,9 @@ def main():
     info["score"] = score
     info["first_viewing"] = first_viewing
     store(info)
-    print(f"<https://letterboxd.com/search/{info['letterboxd_title']}/>")
+    letterboxd = urllib.parse.quote_plus(info["letterboxd_title"])
+    print(f"<https://letterboxd.com/search/{letterboxd}/>")
+    print(f"<https://trakt.tv/search?query={letterboxd}>")
 
 
 if __name__ == "__main__":
