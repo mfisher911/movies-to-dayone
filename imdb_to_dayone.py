@@ -6,6 +6,7 @@ import urllib.parse
 import urllib.request
 import shutil
 import subprocess
+import sys
 
 
 def store(row):
@@ -39,7 +40,10 @@ def store(row):
 
 def main():
     """Get user input and store the info to DayOne"""
-    url = input("IMDb URL: ")
+    if "https:" in sys.argv[1]:
+        url = sys.argv[1]
+    else:
+        url = input("IMDb URL: ")
     url = url.strip().replace("/reference", "")
     score = input("Rating: ").strip()
     is_new = input("First viewing (y/N): ")
