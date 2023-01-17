@@ -70,13 +70,33 @@ def store(row):
 
 def main():
     """Get user input and store the info to DayOne"""
-    if "https:" in sys.argv[1]:
+    # a little convoluted because I want optional positional arguments
+    # (that is, script [--test] [URL] [SCORE] [IS_NEW])
+    test = url = score = is_new = None
+
+    if "--test" in sys.argv:
+        test = True
+        sys.argv.remove("--test")
+
+    if len(sys.argv) == 4 and sys.argv[3].casefold() in ["y", "n"]:
+        is_new = sys.argv[3].casefold()
+
+    if len(sys.argv) >= 3 and sys.argv[2] in ["1", "2", "3", "4", "5"]:
+        score = int(sys.argv[2])
+
+    if len(sys.argv) >= 2 and "https:" in sys.argv[1]:
         url = sys.argv[1]
     else:
         url = input("IMDb URL: ")
     url = url.strip().replace("/reference", "")
-    score = input("Rating: ").strip()
-    is_new = input("First viewing (y/N): ")
+
+    while not score:
+        _score = input("Rating (1-5): ").strip()
+        if str(_score) in ("1", "2", "3", "4", "5"):
+            score = str(_score)
+
+    if not is_new:
+        is_new = input("First viewing (y/N): ")
     first_viewing = is_new.strip().casefold() == "y"
 
     req = urllib.request.Request(
@@ -91,7 +111,11 @@ def main():
     info = json.loads(resp)
     info["score"] = score
     info["first_viewing"] = first_viewing
-    store(info)
+
+    if test:
+        print(info)
+    else:
+        store(info)
 
         _title = urllib.parse.quote_plus(info["title"])
         subprocess.call(
