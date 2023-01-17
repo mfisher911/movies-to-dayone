@@ -11,6 +11,9 @@ import shutil
 import subprocess
 import sys
 
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+
 
 def store(row):
     """Actually save the info to DayOne"""
@@ -69,6 +72,4 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.WARNING)
-    logger = logging.getLogger()
     main()
