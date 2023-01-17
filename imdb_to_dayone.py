@@ -78,9 +78,11 @@ def main():
     score = input("Rating: ").strip()
     is_new = input("First viewing (y/N): ")
     first_viewing = is_new.strip().casefold() == "y"
-    data = f"input={url}".encode("utf-8")
+
     req = urllib.request.Request(
-        "https://shell.themfishers.com/imdb/", data=data, method="POST"
+        "https://shell.fisher.one/imdb/",
+        data=f"input={url}".encode("utf-8"),
+        method="POST",
     )
 
     with urllib.request.urlopen(req) as f:
