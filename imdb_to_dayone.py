@@ -113,6 +113,7 @@ def main():
 
     if test:
         print(info)
+        print(make_entry(info))
     else:
         store(info)
 
