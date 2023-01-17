@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""Command-line tool to create a templatized Day One entry
+
+Basically a re-implementation of my iOS shortcut."""
 
 import json
 import logging
