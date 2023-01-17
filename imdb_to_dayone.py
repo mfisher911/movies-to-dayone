@@ -85,8 +85,8 @@ def main():
         method="POST",
     )
 
-    with urllib.request.urlopen(req) as f:
-        resp = f.read().decode("utf-8")
+    with urllib.request.urlopen(req) as _file:
+        resp = _file.read().decode("utf-8")
 
     info = json.loads(resp)
     info["score"] = score
