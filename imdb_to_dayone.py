@@ -5,7 +5,6 @@ Basically a re-implementation of my iOS shortcut."""
 
 import json
 import logging
-import textwrap
 import urllib.parse
 import urllib.request
 import shutil
@@ -24,24 +23,17 @@ def store(row):
         summary = f"\n{row['summary']}"
     rating = f"{row['score']}/5"
     if row.get("foreign_title", None):
-        entry = textwrap.dedent(
-            f"""\
-            # {row["original_title"]} ({row['year']})
-            **{row["title"]}**
-            {rating}
-            {summary}
-            -- {row["url"]}
-            """
-        )
+        entry = f"""# {row["original_title"]} ({row['year']})
+*{row["title"]}*
+{rating}
+{summary}
+-- {row["url"]}"""
     else:
-        entry = textwrap.dedent(
-            f"""\
-            # {row['title']} ({row['year']})
-            {rating}
-            {summary}
-            -- {row['url']}
-            """
-        )
+        entry = f"""# {row['title']} ({row['year']})
+{rating}
+{summary}
+-- {row['url']}"""
+
 
     tags = ["--tags", "Movies", rating]
     if row["first_viewing"]:
