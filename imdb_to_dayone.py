@@ -21,14 +21,8 @@ def make_entry(row):
     if row["summary"] != "N/A":
         summary = f"\n{row['summary']}"
     rating = f"{row['score']}/5"
-    if row.get("foreign_title", None):
-        entry = f"""# {row["original_title"]} ({row['year']})
-*{row["title"]}*
-{rating}
-{summary}
--- {row["url"]}"""
-    else:
-        entry = f"""# {row['title']} ({row['year']})
+    us_title = f"\n*{row['title']}*" if row.get("foreign_title") else ""
+    entry = f"""# {row['original_title']} ({row['year']}){us_title}
 {rating}
 {summary}
 -- {row['url']}"""
