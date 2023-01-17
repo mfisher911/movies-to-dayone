@@ -5,6 +5,7 @@ Basically a re-implementation of my iOS shortcut."""
 
 import json
 import logging
+import textwrap
 import urllib.parse
 import urllib.request
 import shutil
@@ -22,7 +23,25 @@ def store(row):
     if row["summary"] != "N/A":
         summary = f"\n{row['summary']}"
     rating = f"{row['score']}/5"
-    entry = f"# {row['title']}\n{rating}\n{summary}\n-- {row['url']}"
+    if row.get("foreign_title", None):
+        entry = textwrap.dedent(
+            f"""\
+            # {row["original_title"]} ({row['year']})
+            **{row["title"]}**
+            {rating}
+            {summary}
+            -- {row["url"]}
+            """
+        )
+    else:
+        entry = textwrap.dedent(
+            f"""\
+            # {row['title']} ({row['year']})
+            {rating}
+            {summary}
+            -- {row['url']}
+            """
+        )
 
     tags = ["--tags", "Movies", rating]
     if row["first_viewing"]:
@@ -66,9 +85,14 @@ def main():
     info["score"] = score
     info["first_viewing"] = first_viewing
     store(info)
-    letterboxd = urllib.parse.quote_plus(info["letterboxd_title"])
-    print(f"<https://letterboxd.com/search/{letterboxd}/>")
-    print(f"<https://trakt.tv/search?query={letterboxd}>")
+
+        _title = urllib.parse.quote_plus(info["title"])
+        subprocess.call(
+            ["/usr/bin/open", f"https://letterboxd.com/search/{_title}/"]
+        )
+        subprocess.call(
+            ["/usr/bin/open", f"https://trakt.tv/search?query={_title}"]
+        )
 
 
 if __name__ == "__main__":
