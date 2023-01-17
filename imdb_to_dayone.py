@@ -15,9 +15,8 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
-def store(row):
-    """Actually save the info to DayOne"""
-    args = ["dayone2", "--journal", "Journal"]
+def make_entry(row):
+    """Format the row info for Day One."""
     summary = "\n"
     if row["summary"] != "N/A":
         summary = f"\n{row['summary']}"
@@ -34,6 +33,14 @@ def store(row):
 {summary}
 -- {row['url']}"""
 
+    return entry, rating
+
+
+def store(row):
+    """Actually save the info to DayOne"""
+    args = ["dayone2", "--journal", "Journal"]
+
+    (entry, rating) = make_entry(row)
 
     tags = ["--tags", "Movies", rating]
     if row["first_viewing"]:
