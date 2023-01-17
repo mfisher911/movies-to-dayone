@@ -50,9 +50,14 @@ def store(row):
     args.extend(tags)
 
     if _path := shutil.which("corelocationcli"):
-        res = subprocess.run(args=[_path], capture_output=True)
-        coord = str(res.stdout, "utf8")
-        args.extend(["--coordinate"] + list(coord.strip().split()))
+        try:
+            res = subprocess.run(
+                args=[_path], check=True, text=True, capture_output=True
+            )
+            if coord := res.stdout.strip():
+                args.extend(["--coordinate"] + list(coord.split()))
+        except subprocess.CalledProcessError:
+            print("    Could not get coordinates with corelocationcli")
 
     args.extend(["--", "new"])
 
