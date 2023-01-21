@@ -30,7 +30,20 @@ def make_entry(row):
     return entry, rating
 
 
-def store(row):
+def get_location():
+    """Get the current computer location."""
+    if _path := shutil.which("corelocationcli"):
+        try:
+            res = subprocess.run(
+                args=[_path], check=True, text=True, capture_output=True
+            )
+            if coord := res.stdout.strip():
+                args.extend(["--coordinate"] + list(coord.split()))
+        except subprocess.CalledProcessError:
+            print("    Could not get coordinates with corelocationcli")
+
+
+def store(row, location=None):
     """Actually save the info to DayOne"""
     args = ["dayone2", "--journal", "Journal"]
 
@@ -42,15 +55,8 @@ def store(row):
 
     args.extend(tags)
 
-    if _path := shutil.which("corelocationcli"):
-        try:
-            res = subprocess.run(
-                args=[_path], check=True, text=True, capture_output=True
-            )
-            if coord := res.stdout.strip():
-                args.extend(["--coordinate"] + list(coord.split()))
-        except subprocess.CalledProcessError:
-            print("    Could not get coordinates with corelocationcli")
+    if location:
+        args.extend(["--coordinate"] + list(location.split()))
 
     args.extend(["--", "new"])
 
