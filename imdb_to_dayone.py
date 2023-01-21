@@ -120,12 +120,14 @@ def main():
     info = json.loads(resp)
     info["score"] = score
     info["first_viewing"] = first_viewing
+    coord = get_location()
 
     if test:
+        print(f"{coord=}")
         print(info)
         print(make_entry(info))
     else:
-        store(info)
+        store(info, coord)
 
         _title = urllib.parse.quote_plus(info["title"])
         subprocess.call(
