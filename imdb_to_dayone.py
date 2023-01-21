@@ -11,6 +11,8 @@ import shutil
 import subprocess
 import sys
 
+from pathlib import Path
+
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
@@ -32,15 +34,22 @@ def make_entry(row):
 
 def get_location():
     """Get the current computer location."""
-    if _path := shutil.which("corelocationcli"):
-        try:
-            res = subprocess.run(
-                args=[_path], check=True, text=True, capture_output=True
-            )
-            if coord := res.stdout.strip():
-                args.extend(["--coordinate"] + list(coord.split()))
-        except subprocess.CalledProcessError:
-            print("    Could not get coordinates with corelocationcli")
+    result = None
+    kmtrigger = [
+        Path("~/bin/kmtrigger.pl").expanduser(),
+        "Location-Shortcut",
+    ]
+    subprocess.run(args=kmtrigger, check=True)
+    response = subprocess.run(
+        args=["pbpaste"], check=True, text=True, capture_output=True
+    )
+
+    if response.stdout:
+        logging.debug(response.stdout)
+        coord = response.stdout.split("\n")[0]
+        result = coord.replace(",", "")
+
+    return result
 
 
 def store(row, location=None):
