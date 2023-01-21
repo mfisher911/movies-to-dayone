@@ -70,6 +70,7 @@ def main():
     if "--test" in sys.argv:
         test = True
         sys.argv.remove("--test")
+        logger.parent.setLevel(logging.DEBUG)
 
     if len(sys.argv) == 4 and sys.argv[3].casefold() in ["y", "n"]:
         is_new = sys.argv[3].casefold()
