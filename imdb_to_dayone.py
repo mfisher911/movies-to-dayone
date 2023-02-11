@@ -5,6 +5,7 @@ Basically a re-implementation of my iOS shortcut."""
 
 import json
 import logging
+import os
 import urllib.parse
 import urllib.request
 import subprocess
@@ -107,9 +108,16 @@ def main():
         is_new = input("First viewing (y/N): ")
     first_viewing = is_new.strip().casefold() == "y"
 
+    data = urllib.parse.urlencode(
+        {
+            "input": url,
+            "email": os.getenv("REMOTE_USER", None),
+            "password": os.getenv("REMOTE_PASS", None),
+        }
+    )
     req = urllib.request.Request(
         "https://shell.fisher.one/imdb/",
-        data=f"input={url}".encode("utf-8"),
+        data=data.encode("utf-8"),
         method="POST",
     )
 
