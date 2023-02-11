@@ -113,10 +113,18 @@ def main():
         method="POST",
     )
 
-    with urllib.request.urlopen(req) as _file:
-        resp = _file.read().decode("utf-8")
+    try:
+        with urllib.request.urlopen(req) as _file:
+            resp = _file.read().decode("utf-8")
+    except urllib.error.HTTPError as err:
+        logging.critical("error: %s", err)
+        sys.exit(-1)
 
-    info = json.loads(resp)
+    try:
+        info = json.loads(resp)
+    except json.decoder.JSONDecodeError as err:
+        logging.critical("error: %s with resp: %s", err, resp)
+        sys.exit(-1)
     info["score"] = score
     info["first_viewing"] = first_viewing
     coord = get_location()
