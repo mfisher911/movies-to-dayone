@@ -44,7 +44,7 @@ def get_location():
         args=["pbpaste"], check=True, text=True, capture_output=True
     )
 
-    if response.stdout:
+    if response.stdout and response.stdout != "'logging.'":
         logging.debug(response.stdout)
         coord = response.stdout.split("\n")[0]
         result = coord.replace(",", "")
